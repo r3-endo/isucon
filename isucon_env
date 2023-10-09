@@ -1,0 +1,60 @@
+###############################################
+# MySQLの接続先
+###############################################
+MYSQL_HOSTNAME=127.0.0.1
+MYSQL_PORT=3306
+MYSQL_USER=isucon
+MYSQL_DATABASE=isuports
+MYSQL_PASS=isucon
+
+###############################################
+# MySQL用のオプション
+# AMYSQL_CNF : MySQLの設定ファイル
+# SLOW_LOG : MySQLのスローログ
+###############################################
+MYSQL_CNF=/home/isucon/mysql
+SLOW_LOG=/tmp/slow_query_*
+
+###############################################
+# NGINX用のオプション
+# NGINX_CNF : NGINXの設定ファイル
+###############################################
+NGINX_CNF=/home/isucon/nginx/
+
+###############################################
+# GO用のオプション
+# APP_NAME : アプリ名
+# APP_LOGS : アプリログ
+###############################################
+APP_NAME=isuports.go
+APP_LOGS=/home/isucon/logs/app
+
+###############################################
+# ALP用のオプション
+# ALP_SORT : 集計の並び順
+# ALP_FORMAT : 集計の出力項目
+# ALP_LOG : Nginxのログファイル
+# ALP_UPSTREAM_LOG : Nginxのアップストリームログファイル
+# ALP_API_GROUP : APIを正規表現でまとめて集計する
+###############################################
+ALP_SORT=sum
+ALP_API_GROUP="/api/announcements/[-a-z0-9]+, \
+/api/courses/[a-zA-Z0-9]+/classes, \
+/api/courses/[-A-Z0-9]/classes/[-A-Z0-9]+/assignments, \
+/api/courses/[-A-Z0-9]+/assignments, \
+/api/courses/[-A-Z0-9]+"
+ALP_FORMAT=count,method,uri,min,max,sum,avg,p99,1xx,2xx,3xx,4xx,5xx
+ALP_LOG=/var/log/nginx/access.log
+ALP_UPSTREAM_LOG=/var/log/nginx/upstream.log
+
+###############################################
+# Bench用のオプション
+# BENCH_LOG : ベンチのログフォルダ
+# BENCH_DURATION : 集計時間
+# BENCH_ALP_LOG : Nginxのログファイル
+# BENCH_TOP_COUNT_DURATION : topの集計間隔
+###############################################
+BENCH_LOG=/home/isucon/logs
+BENCH_DURATION=90
+BENCH_ALP_LOG=/var/log/nginx/*
+BENCH_TOP_COUNT_DURATION=1
