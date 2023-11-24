@@ -4,7 +4,7 @@
 MYSQL_HOSTNAME=127.0.0.1
 MYSQL_PORT=3306
 MYSQL_USER=isucon
-MYSQL_DATABASE=isuports
+MYSQL_DATABASE=isucon
 MYSQL_PASS=isucon
 
 ###############################################
@@ -13,7 +13,7 @@ MYSQL_PASS=isucon
 # SLOW_LOG : MySQLのスローログ
 ###############################################
 MYSQL_CNF=/home/isucon/mysql
-SLOW_LOG=/tmp/slow_query_*
+SLOW_LOG=/var/log/mysql/mysql-slow.log
 
 ###############################################
 # NGINX用のオプション
@@ -26,7 +26,7 @@ NGINX_CNF=/home/isucon/nginx/
 # APP_NAME : アプリ名
 # APP_LOGS : アプリログ
 ###############################################
-APP_NAME=isuports.go
+APP_NAME=isuconquest
 APP_LOGS=/home/isucon/logs/app
 
 ###############################################
@@ -38,11 +38,19 @@ APP_LOGS=/home/isucon/logs/app
 # ALP_API_GROUP : APIを正規表現でまとめて集計する
 ###############################################
 ALP_SORT=sum
-ALP_API_GROUP="/api/announcements/[-a-z0-9]+, \
-/api/courses/[a-zA-Z0-9]+/classes, \
-/api/courses/[-A-Z0-9]/classes/[-A-Z0-9]+/assignments, \
-/api/courses/[-A-Z0-9]+/assignments, \
-/api/courses/[-A-Z0-9]+"
+ALP_API_GROUP="/user/[-a-zA-Z0-9]+/home, \
+  /user/[-a-zA-Z0-9]+/reward, \
+  /user/[-a-zA-Z0-9]+/card, \
+  /user/[-a-zA-Z0-9]+/item, \
+  /user/[-a-zA-Z0-9]+/card/addexp/[-a-zA-Z0-9]+, \
+  /user/[-a-zA-Z0-9]+/present/index/[-a-zA-Z0-9], \
+  /user/[-0-9]+/present/receive, \
+  /user/[-a-zA-Z0-9]+/gacha/index, \
+  /user/[-0-9]+/gacha/draw/[-0-9]+/[-0-9]+, \
+  /login, \
+  /admin/[-a-zA-Z0-9], \
+  /admin/user/[-a-zA-Z0-9], \
+  /api/courses/[-A-Z0-9]+"
 ALP_FORMAT=count,method,uri,min,max,sum,avg,p99,1xx,2xx,3xx,4xx,5xx
 ALP_LOG=/var/log/nginx/access.log
 ALP_UPSTREAM_LOG=/var/log/nginx/upstream.log
@@ -51,10 +59,6 @@ ALP_UPSTREAM_LOG=/var/log/nginx/upstream.log
 # Bench用のオプション
 # BENCH_LOG : ベンチのログフォルダ
 # BENCH_DURATION : 集計時間
-# BENCH_ALP_LOG : Nginxのログファイル
-# BENCH_TOP_COUNT_DURATION : topの集計間隔
 ###############################################
 BENCH_LOG=/home/isucon/logs
-BENCH_DURATION=90
-BENCH_ALP_LOG=/var/log/nginx/*
-BENCH_TOP_COUNT_DURATION=1
+BENCH_DURATION=180
