@@ -175,6 +175,43 @@
 #### 2.1.3. INSERT
 
 - [ ] GO アプリを改修し、BULK INSERT する
+- [ ] バルクインサート考え方
+- INSERTで流し込むSQLの型を持つスライスを定義
+- 上記で定義したスライスに値を詰め込む
+- クエリの組み立てはループの外でNamedExecを使用
+
+
+  ```go
+  	// Todo Bulk
+	// type Registration struct {
+	// 	CourseID string `db:"course_id"`
+	// 	UserID   string `db:"user_id"`
+	// }
+	type UnreadAnnouncement struct {
+		AnnouncementID string `db:"announcement_id"`
+		UserID string `db:"user_id"`
+	}
+	// バルクインサート用のデータ
+	var unreadAnnouncements []UnreadAnnouncement
+
+	for _, user := range targets {
+    unreadAnnouncement := UnreadAnnouncement{
+        AnnouncementID: req.ID,
+        UserID:         user.ID,
+    }
+    unreadAnnouncements = append(unreadAnnouncements, unreadAnnouncement)
+	}
+		// for _, user := range targets {
+		// 	if _, err := tx.Exec("INSERT INTO `unread_announcements` (`announcement_id`, `user_id`) VALUES (?, ?)", req.ID, user.ID); err != nil {
+		// 		c.Logger().Error(err)
+		// 		return c.NoContent(http.StatusInternalServerError)
+		// 	}
+		// }
+
+	// クエリの組み立てとNamedExecの実行
+	insertQuery := "INSERT INTO `unread_announcements` (`announcement_id`, `user_id`) VALUES (:announcement_id, :user_id)"
+	_, err = tx.NamedExec(insertQuery, unreadAnnouncements)
+  ```
 
   ```go
   log.Printf("Target : %v", targets)
